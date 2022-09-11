@@ -1,5 +1,4 @@
 import os
-import shutil
 from datetime import datetime
 
 import allure
@@ -11,7 +10,6 @@ from pages.login_page import LoginPage
 from utils import session
 from utils.api import API
 from utils.browser_factory import BrowserFactory
-from utils.helper import read_json
 from utils.logger_util import get_logger
 from utils.report_helpers import build_table, write_to_csv, build_data
 
@@ -47,6 +45,7 @@ def pytest_addoption(parser):
         required=True,
         help="Account ID to run tests with",
     )
+    parser.addoption("--CLEANUP", action="store_true", help="option to cleanup account data as a part of test setup")
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -102,8 +101,10 @@ def driver(request, url, email, password, account_id):
     temp_user = {"user_email": email, "user_password": password}
     api_obj = API(url, temp_user["user_email"], temp_user["user_password"])
 
-    # Cleanup account objects(Keys, groups, apps, etc) as a part of setup
-    api_obj.remove_objects_from_account(account_id)
+    if request.config.getoption("CLEANUP"):
+        # Cleanup account objects(Keys, groups, apps, etc) as a part of setup
+        logger.info(f"Clean up account {account_id} data")
+        api_obj.remove_objects_from_account(account_id)
 
     user_details = api_obj.get_user(api_obj.user_id)
     if not user_details.json().get("first_name"):
@@ -190,7 +191,7 @@ def pytest_sessionfinish(session, exitstatus):
                 total_tests,
                 test_info=env_details,
             )
-            with open("reports/index.html", "w") as f:
+            with open(f"reports/index_{datetime.now().strftime('%d%m%Y%H%M%S')}.html", "w") as f:
                 f.write(html_table_blue_light)
     except Exception as e:
         logger.info(f"Failed to generate html report: {e}")

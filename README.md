@@ -1,48 +1,59 @@
-# DSM Frontend Test Bench
+# DSM Automation Test Suite
 
-Test bench for DSM frontend using pytest-selenium. It generates reports in allure and HTML.
+Test suite for DSM frontend using pytest-selenium. It generates reports in allure and HTML format.
 
 ### *Dependencies*
-* [Python3](https://www.python.org/downloads/)
-* Browsers - Chrome, Firefox, Edge
+* Docker Engine 
+  - Minimum RAM: 8 GB; Recommended: 16 GB.
+  - Minimum Disk Space: ~3GB.
 
-### *Running tests in docker container*
+### *Steps for running tests in docker container*
 The docker image has the browsers and other dependencies installed.
+
+1. Clone repository
 ```commandline
-docker build . -t dsmqa
-docker run -v `pwd`/reports:/app/reports dsmqa -m smoke --URL $URL --EMAIL $EMAIL --PASSWORD $PASSWORD --ACCOUNT_ID $ACCOUNT_ID --BROWSER=$BROWSER
+git clone git@github.com:fortanix/sdkms-performance-testbench.git
 ```
-Optionally, `–add-host` option can be passed to add host-entries onto /etc/hosts when the container is run.
+
+2. Build docker image 
+```commandline
+cd sdkms-performance-testbench
+docker build . -t dsmqa
+```
+
+3. Run tests
+```commandline
+docker run -v `pwd`/reports:/app/reports dsmqa -m smoke --URL $URL --EMAIL $EMAIL --PASSWORD $PASSWORD --ACCOUNT_ID $ACCOUNT_ID --BROWSER=$BROWSER --CLEANUP
+```
+Optionally, `–add-host [Hostname]:[IPAddress]` option can be passed to add host-entries onto /etc/hosts when the container is run.
 The execution reports will be stored in reports directory once the execution is completed.
 
-### *Local Environment setup*
-```commandline
-python3 -m venv dsmenv
-source dsmenv/bin/activate
-python3 -m pip install -r requirements.txt
-```
-### *Usage*
-```
-pytest -m smoke --URL $URL --EMAIL $EMAIL --PASSWORD $PASSWORD --ACCOUNT_ID $ACCOUNT_ID --BROWSER=$BROWSER
-```
+**NOTE**: On passing option `--CLEANUP`, the existing account data will be deleted and test will begin with a clean account. All the previous security objects, groups, apps, plugins would be removed.
 
-Test Arguments:
+**Test Arguments:**
 
 ```
 -m              Pytest marker to run tests. e.g: smoke, apps, dashboard, groups, security_objects
 
---URL	        URL endpoint to be used for running tests
+--URL	        URL endpoint to be used for running tests. e.g: https://amer.smartkey.io/
 
 --EMAIL         Email ID to be used for logging in
 
 --PASSWORD      Password to be used for logging in
 
---ACCOUNT_ID    Account ID to be used for test operations
+--ACCOUNT_ID    Account ID to be used for test operations. Account ID can be copied from DSM UI > Select account > Settings > Click Copy account id icon.
 
 --BROWSER       Optional argument to run tests with different browsers. e.g: Chrome(default), Firefox, Edge
 
---BROWSER_MODE  Optional argument to run test in head/headless mode.
+--BROWSER_MODE  Optional argument to run test in head/headless mode. e.g: headless(only runs headless in docker, default), headless
+
+--CLEANUP       Pass the option to clean up the previous data in the account.  
 ```
+
+### *Result and Reporting*
+Once the test execution is completed, the reports will be generated in the reports directory. 
+1. HTML report: HTML is generated in reports directory with naming convention as index_*.html
+2. Allure report: Allure reports is generated in the reports directory and can be viewed by running the command `allure server reports` from the project root directory. This requires allure cli to be installed on the host machine. Allure cli can be installed from pip package `allure-pytest` or from https://github.com/allure-framework/allure2/releases
 
 # Contributing
 
