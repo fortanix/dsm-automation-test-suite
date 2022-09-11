@@ -12,12 +12,12 @@ The docker image has the browsers and other dependencies installed.
 
 1. Clone repository
 ```commandline
-git clone git@github.com:fortanix/sdkms-performance-testbench.git
+git clone git@github.com:fortanix/dsm-automation-test-suite.git
 ```
 
 2. Build docker image 
 ```commandline
-cd sdkms-performance-testbench
+cd dsm-automation-test-suite
 docker build . -t dsmqa
 ```
 
