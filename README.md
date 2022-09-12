@@ -45,7 +45,7 @@ The execution reports will be stored in reports directory once the execution is 
 
 --BROWSER       Optional argument to run tests with different browsers. e.g: Chrome(default), Firefox, Edge
 
---BROWSER_MODE  Optional argument to run test in head/headless mode. e.g: headless(only runs headless in docker, default), headless
+--BROWSER_MODE  Optional argument to run test in head/headless mode. e.g: headless(default, only runs headless in docker), head
 
 --CLEANUP       Pass the option to clean up the previous data in the account.  
 ```
@@ -53,7 +53,7 @@ The execution reports will be stored in reports directory once the execution is 
 ### *Result and Reporting*
 Once the test execution is completed, the reports will be generated in the reports directory. 
 1. HTML report: HTML is generated in reports directory with naming convention as index_*.html
-2. Allure report: Allure reports is generated in the reports directory and can be viewed by running the command `allure server reports` from the project root directory. This requires allure cli to be installed on the host machine. Allure cli can be installed from pip package `allure-pytest` or from https://github.com/allure-framework/allure2/releases
+2. Allure report: Allure report is generated in the reports directory and can be viewed by running the command `allure server reports` from the project root directory. This requires allure cli to be installed on the host machine. Allure cli can be installed from pip package `allure-pytest` or from https://github.com/allure-framework/allure2/releases
 
 # Contributing
 
