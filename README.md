@@ -53,7 +53,7 @@ The execution reports will be stored in reports directory once the execution is 
 ### *Result and Reporting*
 Once the test execution is completed, the reports will be generated in the reports directory. 
 1. HTML report: HTML is generated in reports directory with naming convention as index_*.html
-2. Allure report: Allure report is generated in the reports directory and can be viewed by running the command `allure server reports` from the project root directory. This requires allure cli to be installed on the host machine. Allure cli can be installed from pip package `allure-pytest` or from https://github.com/allure-framework/allure2/releases
+2. Allure report: Allure report is generated in the reports directory and can be viewed by running the command `allure serve reports` from the project root directory. This requires allure cli to be installed on the host machine. Allure cli can be installed from pip package `allure-pytest` or from https://github.com/allure-framework/allure2/releases
 
 # Contributing
 
