@@ -1,6 +1,9 @@
 from selenium.webdriver.common.by import By
 
 pageTitleText = (By.CSS_SELECTOR, ".main-title h1 span")
+pageTitleAuditLogText = (By.CSS_SELECTOR, ".main-title h1")
+homeWelcomeText = (By.CSS_SELECTOR, ".info-grid__getting-started .info-card__title")
+homeTab = (By.CSS_SELECTOR, ".bkl-nav [href='#/']")
 dashboardTab = (By.CSS_SELECTOR, ".bkl-nav [href='#/']")
 integrationsTab = (By.CSS_SELECTOR, ".bkl-nav [href='#/integrations']")
 groupsTab = (By.CSS_SELECTOR, ".bkl-nav [href='#/groups']")
@@ -21,3 +24,4 @@ hsmGatewayText = (By.CSS_SELECTOR, ".card-hsm")
 usageCharts = (By.CSS_SELECTOR, ".card-line-chart__header")
 accountSwitcherBtn = (By.CSS_SELECTOR, ".account-switcher__box")
 viewAllBtn = (By.CSS_SELECTOR, ".account-switcher-dropdown__btn-view-all")
+

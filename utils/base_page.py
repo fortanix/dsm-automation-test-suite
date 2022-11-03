@@ -3,11 +3,7 @@ import time
 from datetime import date, timedelta
 
 import allure
-from selenium.common.exceptions import (
-    StaleElementReferenceException,
-    TimeoutException,
-    NoSuchElementException,
-)
+from selenium.common.exceptions import StaleElementReferenceException, TimeoutException, NoSuchElementException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -27,21 +23,11 @@ class BasePage:
         return WebDriverWait(self.driver, delay)
 
     @allure.step("Verify Text")
-    def open_url(self, url):
-        logger.info(f"Open url: {url}")
-        self.driver.get(url)
-        return self
-
-    @allure.step("Verify Text")
     def verify_text(self, locator, message, delay=40):
         logger.debug("Verify text - " + str(locator) + " message: " + str(message))
         try:
             self.wait(delay).until(EC.text_to_be_present_in_element(locator, message))
-        except (
-            StaleElementReferenceException,
-            TimeoutException,
-            NoSuchElementException,
-        ):
+        except (StaleElementReferenceException, TimeoutException, NoSuchElementException):
             text = self.driver.find_element(*locator).text
             assert text == message, text + "  :  " + message
         return self
@@ -59,15 +45,16 @@ class BasePage:
         self.driver.find_element(*locator).send_keys(data)
         return self
 
-    @allure.step("Input password")
+    @allure.step("Input Password")
     def input_password(self, locator, data, delay=0, clear=False):
         logger.debug("Input text - " + str(locator))
         if delay != 0:
             self.wait_for_element_visible(locator, delay)
-        if clear is True:
-            self.driver.find_element(*locator).clear()
-            self.driver.find_element(*locator).send_keys(Keys.CONTROL + "a")
-            self.driver.find_element(*locator).send_keys(Keys.DELETE)
+        if clear:
+            ele = self.driver.find_element(*locator)
+            time.sleep(0.5)
+            ele.send_keys(Keys.CONTROL + "a")
+            ele.send_keys(Keys.DELETE)
         self.driver.find_element(*locator).send_keys(data)
         return self
 
@@ -194,12 +181,7 @@ class BasePage:
 
     @allure.step("Select by label search")
     def select_by_label_search(
-        self,
-        select_locator=None,
-        option_locator=None,
-        search_locator=None,
-        search_text=None,
-        delay=0,
+            self, select_locator=None, option_locator=None, search_locator=None, search_text=None, delay=0
     ):
         if delay != 0:
             self.wait_for_element_visible(select_locator, delay)
@@ -237,11 +219,7 @@ class BasePage:
             if delay != 0:
                 self.wait_for_elements_visible(locator, delay)
             elements = self.driver.find_elements(*locator)
-        except (
-            StaleElementReferenceException,
-            TimeoutException,
-            NoSuchElementException,
-        ):
+        except (StaleElementReferenceException, TimeoutException, NoSuchElementException):
             logger.debug("Element not present - " + str(locator))
         self.set_implicitwait_default()
         logger.debug(f"Elements: {elements}")
@@ -268,11 +246,7 @@ class BasePage:
                 logger.debug(locator)
                 self.wait_for_element_presence(locator, delay)
             is_present = self.driver.find_element(*locator).is_displayed()
-        except (
-            StaleElementReferenceException,
-            TimeoutException,
-            NoSuchElementException,
-        ):
+        except (StaleElementReferenceException, TimeoutException, NoSuchElementException):
             logger.debug("Element not present - " + str(locator))
             is_present = False
         self.set_implicitwait_default()
@@ -317,13 +291,13 @@ class BasePage:
         if "+" not in dates and "-" not in dates:
             dates = "+" + dates
         assert self.get_datetime(dates, dateformat=dformat[0]) in data, (
-            str(self.get_datetime(dates, dateformat=dformat[0])) + " " + data
+                str(self.get_datetime(dates, dateformat=dformat[0])) + " " + data
         )
         assert self.get_datetime(dates, dateformat=dformat[1]) in data, (
-            str(self.get_datetime(dates, dateformat=dformat[1])) + " " + data
+                str(self.get_datetime(dates, dateformat=dformat[1])) + " " + data
         )
         assert self.get_datetime(dates, dateformat=dformat[2]) in data, (
-            str(self.get_datetime(dates, dateformat=dformat[2])) + " " + data
+                str(self.get_datetime(dates, dateformat=dformat[2])) + " " + data
         )
 
     @allure.step("Hover and click")
@@ -363,11 +337,6 @@ class BasePage:
     def get_alert_msg(self, delay=20):
         locator = (By.CSS_SELECTOR, '[role="alert"]')
         alert_text = self.get_text(locator, delay).strip()
-        for _ in range(5):
-            if self.is_element_present(locator, 5):
-                self.click(locator)
-                self.sleep(1)
-                continue
-            break
+        self.wait_until_element_not_visible(locator)
         self.sleep(1)
         return alert_text
