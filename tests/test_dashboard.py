@@ -66,7 +66,7 @@ class TestDashboard:
     def test_dashboard_verify_text(self):
         logger.info(f"Test step: Verify dashboard texts")
         self.dp.navigate_to_dashboard()
-        assert all(item in self.dp.get_total_apps_card_texts() for item in ["Total Active Apps", "Cloud Accounts"])
+        assert all(item in self.dp.get_total_apps_card_texts() for item in ["Total Active Apps", "Cloud Connections"])
         assert all(
             item in self.dp.get_total_operations_card_texts()
             for item in [
