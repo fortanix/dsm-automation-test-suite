@@ -23,6 +23,12 @@ class BasePage:
         return WebDriverWait(self.driver, delay)
 
     @allure.step("Verify Text")
+    def open_url(self, url):
+        logger.info(f"Open url: {url}")
+        self.driver.get(url)
+        return self
+
+    @allure.step("Verify Text")
     def verify_text(self, locator, message, delay=40):
         logger.debug("Verify text - " + str(locator) + " message: " + str(message))
         try:
@@ -337,6 +343,11 @@ class BasePage:
     def get_alert_msg(self, delay=20):
         locator = (By.CSS_SELECTOR, '[role="alert"]')
         alert_text = self.get_text(locator, delay).strip()
-        self.wait_until_element_not_visible(locator)
+        for _ in range(5):
+            if self.is_element_present(locator, 5):
+                self.click(locator)
+                self.sleep(1)
+                continue
+            break
         self.sleep(1)
         return alert_text
